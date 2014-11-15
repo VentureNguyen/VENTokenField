@@ -26,6 +26,20 @@
     self.tokenField.toLabelText = NSLocalizedString(@"Post to:", nil);
     [self.tokenField setColorScheme:[UIColor colorWithRed:61/255.0f green:149/255.0f blue:206/255.0f alpha:1.0f]];
     [self.tokenField becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+}
+
+- (void)keyboardWillShow:(NSNotification *)note
+{
+    NSLog(@"Keyboard: Show");
+}
+
+- (void)keyboardWillHide:(NSNotification *)note
+{
+   NSLog(@"Keyboard: Hide");
 }
 
 - (IBAction)didTapCollapseButton:(id)sender

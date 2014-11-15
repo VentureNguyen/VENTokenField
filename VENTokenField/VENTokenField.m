@@ -44,6 +44,7 @@ static const CGFloat VENTokenFieldDefaultMaxHeight          = 150.0;
 @property (strong, nonatomic) VENBackspaceTextField *inputTextField;
 @property (strong, nonatomic) UIColor *colorScheme;
 @property (strong, nonatomic) UILabel *collapsedLabel;
+@property (assign, nonatomic) BOOL shouldResign;
 
 @end
 
@@ -73,6 +74,7 @@ static const CGFloat VENTokenFieldDefaultMaxHeight          = 150.0;
 
 - (BOOL)resignFirstResponder
 {
+    self.shouldResign = YES;
     return [self.inputTextField resignFirstResponder];
 }
 
@@ -501,6 +503,29 @@ static const CGFloat VENTokenFieldDefaultMaxHeight          = 150.0;
         [self unhighlightAllTokens];
     }
 }
+
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ((self.shouldResign) || (textField != self.inputTextField)) {
+        self.shouldResign = NO;
+        return YES;
+    } else {
+        BOOL didEnterBackspace = NO;
+        for (VENToken *token in self.tokens) {
+            if (token.highlighted) {
+                didEnterBackspace = YES;
+            }
+        }
+        if (!didEnterBackspace) {
+            [self becomeFirstResponder];
+        } else {
+            [self setCursorVisibility];
+        }
+        return NO;
+    }
+}
+
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
